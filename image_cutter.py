@@ -801,7 +801,7 @@ class ImageCutterGUI:
         try:
             # Load and resize sprite
             sprite_img = Image.open(sprite_path)
-            sprite_img = sprite_img.resize((sprite_size, sprite_size), Image.LANCZOS)
+            sprite_img = sprite_img.resize((192, 192), Image.LANCZOS)
             self.gaxe_sprite_photo_ref = ImageTk.PhotoImage(sprite_img)
 
             # Delay placement until after mainloop starts and sizes are stable
@@ -814,18 +814,22 @@ class ImageCutterGUI:
                     # Get width of controls frame to center sprite within it
                     controls_w = self.controls_frame.winfo_width()
 
+                    # Use the actual resized dimensions (192x192) for calculation
+                    resized_sprite_width = 192 
+                    resized_sprite_height = 192
+
                     # Calculate position below the action frame, centered horizontally within controls
-                    target_x = (controls_w - sprite_size) // 2
+                    target_x = (controls_w - resized_sprite_width) // 2 
                     target_y = action_y + action_h + padding 
                     
                     # Ensure coordinates are positive
                     target_x = max(padding, target_x)
                     target_y = max(padding, target_y)
 
-                    # Check if calculated position is valid within main frame
+                    # Check if calculated position is valid within main frame using the correct size
                     main_w = self.main_frame.winfo_width()
                     main_h = self.main_frame.winfo_height()
-                    if (target_x + sprite_size > main_w or target_y + sprite_size > main_h):
+                    if (target_x + resized_sprite_width > main_w or target_y + resized_sprite_height > main_h):
                          print("Warning: Calculated sprite position is outside main frame, using fallback.")
                          # Fallback: top-left corner within padding
                          target_x = padding
